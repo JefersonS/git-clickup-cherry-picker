@@ -1,9 +1,5 @@
 # git-clickup-cherry-picker.v0.01
 
-<p align="center">
-    <video controls src="https://raw.githubusercontent.com/JefersonS/git-clickup-cherry-picker/main/assets/demo-running-v001.mp4" title="Demo v001"></video>
-</p>
-
 ## Overview
 
 This is a script created to list commit hashes for use in cherry-picking operations. By providing one or more ClickUp ticket IDs, the script fetches all associated commits and lists their hashes in chronological order.
