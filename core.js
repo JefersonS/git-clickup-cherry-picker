@@ -59,7 +59,7 @@ const getCommitsPerRepoName = async (repositoryName, sinceDate, token) => {
 const shouldCommitBePrinted = (commitObject, clickupIds) => {
     const clickupIdsArray = clickupIds.split(',');
     // we want only the ticekts from the given clickup id, this can be updated to be a message or similar
-    const isFromClickupTicket =  clickupIdsArray.some(id => commitObject.commit.message.includes(id));
+    const isFromClickupTicket =  clickupIdsArray.some(id => commitObject.commit.message.includes(id.trim()));
     // bump commits should not be cherry picked, we need to come up with a better naming strategy
     const isBumpCommit = commitObject.commit.message.toLowerCase().includes('chore') && commitObject.commit.message.toLowerCase().includes('bump');
     // simple commits have only one parent while merge commits will always have more than one parent
