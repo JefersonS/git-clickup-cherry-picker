@@ -1,7 +1,7 @@
 # git-clickup-cherry-picker.v0.01
 
 <p align="center">
-    <video controls src="https://raw.githubusercontent.com/JefersonS/git-clickup-cherry-picker/main/demo/running-v001.mp4" title="Demo v001"></video>
+    <video controls src="https://raw.githubusercontent.com/JefersonS/git-clickup-cherry-picker/main/assets/demo-running-v001.mp4" title="Demo v001"></video>
 </p>
 
 ## Overview
