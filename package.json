@@ -1,11 +1,11 @@
 {
   "name": "git-clickup-cherry-picker",
-  "version": "1.0.0",
+  "version": "0.01",
   "type": "module",
   "description": "A simple script made to capture commit hashes to be used in a cherry pick. Given a single or list of clickup tickets it will fetch all commits containing the tickets id and list hashes in date order.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node interface.js"
   },
   "keywords": [],
   "author": "",

@@ -1,34 +1,34 @@
 import { Octokit } from "octokit";
 import chalk from 'chalk';
 
-export const startProcess = async (clickupId, reposList, sinceDate, inputToken) => {
+export const startProcess = async (clickupIds, reposList, sinceDate, inputToken) => {
     const token = inputToken || process.env.CHERRY_PICKER_TOKEN;
     if (!token) {
         console.log('Missing github token, exiting...');
         return;
     }
 
-    if (reposList.length === 0 || !clickupId || !sinceDate) {
+    if (reposList.length === 0 || !clickupIds || !sinceDate) {
         console.log('Missing required parameters, exiting...');
         return;
     }
 
     try {
-        await listAllCommits(clickupId, reposList, sinceDate, token);
+        await listAllCommits(clickupIds, reposList, sinceDate, token);
     } catch (error) {
         console.log('An error occurred while fetching the commits', error);
     }
 }
 
-const listAllCommits = async (clickupId, reposList, sinceDate, inputToken) => {    
+const listAllCommits = async (clickupIds, reposList, sinceDate, inputToken) => {    
     // going for a sequential approach to avoid rate limiting, the commits api is already pretty fast
     for (const repositoryName of reposList) {
         console.log(`\n\n### Listing ${chalk.bold(repositoryName)} commits:\n`);
 
         const commitsResponse = await getCommitsPerRepoName(repositoryName, sinceDate, inputToken);
-        // not a fan of looping twice the list, but it's the best way to not leave the user in the dark for when there are no commits
-        // and the list is always < 20 items
-        const filteredCommits = commitsResponse.filter(commitObject => shouldCommitBePrinted(commitObject, clickupId))
+        // not a fan of looping twice the list, but it's the best way to not leave the user in the dark when there are no commits
+        // and the list is always < 40 items
+        const filteredCommits = commitsResponse.filter(commitObject => shouldCommitBePrinted(commitObject, clickupIds))
         if (filteredCommits.length === 0) {
             console.log('No commits found for this repository');
             continue;
@@ -43,7 +43,7 @@ const getCommitsPerRepoName = async (repositoryName, sinceDate, token) => {
         owner: 'lumahealthhq',
         repo: repositoryName,
         sha: 'blue',
-        per_page: 20,
+        per_page: 40,
         since: sinceDate,
         headers: {
             'X-GitHub-Api-Version': '2022-11-28'
@@ -56,9 +56,10 @@ const getCommitsPerRepoName = async (repositoryName, sinceDate, token) => {
     return response.data;
 }
 
-const shouldCommitBePrinted = (commitObject, clickupId) => {
+const shouldCommitBePrinted = (commitObject, clickupIds) => {
+    const clickupIdsArray = clickupIds.split(',');
     // we want only the ticekts from the given clickup id, this can be updated to be a message or similar
-    const isFromClickupTicket = commitObject.commit.message.includes(clickupId);
+    const isFromClickupTicket =  clickupIdsArray.some(id => commitObject.commit.message.includes(id));
     // bump commits should not be cherry picked, we need to come up with a better naming strategy
     const isBumpCommit = commitObject.commit.message.toLowerCase().includes('chore') && commitObject.commit.message.toLowerCase().includes('bump');
     // simple commits have only one parent while merge commits will always have more than one parent
